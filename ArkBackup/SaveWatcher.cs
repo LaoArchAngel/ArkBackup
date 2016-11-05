@@ -35,9 +35,11 @@ namespace ArkBackup
             IEnumerable<FileInfo> saveFiles = SaveDir.GetFiles("*.ark", SearchOption.TopDirectoryOnly);
             var save = saveFiles.OrderBy(saveFile => saveFile.Length).First();
 
+            _watcher.Path = SaveDir.FullName;
             _watcher.Filter = save.Name;
             _watcher.NotifyFilter = NotifyFilters.LastWrite;
             _watcher.Changed += SaveChanged;
+            _watcher.EnableRaisingEvents = true;
         }
 
         /// <summary>
