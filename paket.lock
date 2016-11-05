@@ -1,0 +1,3 @@
+NUGET
+  remote: https://www.nuget.org/api/v2
+    SevenZipSharp (0.64)
