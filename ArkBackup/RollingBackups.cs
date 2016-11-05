@@ -79,7 +79,7 @@ namespace ArkBackup
             SevenZipCompressor.SetLibraryPath(Path.Combine(@"C:\Program Files\7-Zip", @"7z.dll"));
             SevenZipCompressor compressor = new SevenZipCompressor();
 
-            var timestamp = Timestamp();
+            var timestamp = TimeStamp();
 
             string archiveName = $"SaveBackup_{timestamp}.7z";
             archiveName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, archiveName);
@@ -100,9 +100,13 @@ namespace ArkBackup
             Console.WriteLine();
         }
 
-        private static long Timestamp()
+        /// <summary>
+        /// Returns the year as a 64-bit integer in the format <c>yyyyMMddHHmm</c>
+        /// </summary>
+        /// <returns>The current time stamp, up to the minute.</returns>
+        private static long TimeStamp()
         {
-            long timestamp = DateTime.Now.Year*100000000;
+            long timestamp = (long) DateTime.Now.Year*100000000;
             timestamp += DateTime.Now.Month*1000000;
             timestamp += DateTime.Now.Day*10000;
             timestamp += DateTime.Now.Hour*100;
