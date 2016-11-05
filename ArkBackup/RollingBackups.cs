@@ -79,7 +79,9 @@ namespace ArkBackup
             SevenZipCompressor.SetLibraryPath(Path.Combine(@"C:\Program Files\7-Zip", @"7z.dll"));
             SevenZipCompressor compressor = new SevenZipCompressor();
 
-            string archiveName = $"SaveBackup_{DateTime.Now:yyyyMMddHHmm}.7z";
+            var timestamp = Timestamp();
+
+            string archiveName = $"SaveBackup_{timestamp}.7z";
             archiveName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, archiveName);
 
             Console.WriteLine("Creating backup: {0}", archiveName);
@@ -91,10 +93,21 @@ namespace ArkBackup
             }
 
             compressor.CompressFiles(archiveName, files.Select(info => info.FullName).ToArray());
+            _backups.Add(timestamp, new FileInfo(archiveName));
 
             PruneBackups();
 
             Console.WriteLine();
+        }
+
+        private static long Timestamp()
+        {
+            long timestamp = DateTime.Now.Year*100000000;
+            timestamp += DateTime.Now.Month*1000000;
+            timestamp += DateTime.Now.Day*10000;
+            timestamp += DateTime.Now.Hour*100;
+            timestamp += DateTime.Now.Minute;
+            return timestamp;
         }
     }
 }
