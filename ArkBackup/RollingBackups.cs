@@ -81,9 +81,20 @@ namespace ArkBackup
 
             string archiveName = $"SaveBackup_{DateTime.Now:yyyyMMddHHmm}.7z";
             archiveName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, archiveName);
+
+            Console.WriteLine("Creating backup: {0}", archiveName);
+            Console.WriteLine("Backing up files:");
+
+            foreach (var fileInfo in files)
+            {
+                Console.WriteLine(fileInfo.FullName);
+            }
+
             compressor.CompressFiles(archiveName, files.Select(info => info.FullName).ToArray());
 
             PruneBackups();
+
+            Console.WriteLine();
         }
     }
 }

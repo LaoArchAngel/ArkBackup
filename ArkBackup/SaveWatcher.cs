@@ -35,6 +35,8 @@ namespace ArkBackup
             IEnumerable<FileInfo> saveFiles = SaveDir.EnumerateFiles().Where(info => info.Extension == ".ark");
             var save = saveFiles.OrderBy(saveFile => saveFile.Length).First();
 
+            Console.WriteLine("Watching File: {0}", save.Name);
+
             _watcher.Path = SaveDir.FullName;
             _watcher.Filter = save.Name;
             _watcher.NotifyFilter = NotifyFilters.LastWrite;
@@ -58,6 +60,7 @@ namespace ArkBackup
         /// <param name="args">Arguments given by the watcher.</param>
         private void SaveChanged(object source, FileSystemEventArgs args)
         {
+            Console.WriteLine("Change detected.  Sleeping...");
             Thread.Sleep(TimeSpan.FromMinutes(1));
 
             var toBackup = new List<FileInfo> {new FileInfo(args.FullPath)};
