@@ -79,6 +79,7 @@ namespace ArkBackup
             SevenZipCompressor compressor = new SevenZipCompressor();
 
             string archiveName = $"SaveBackup_{DateTime.Now:yyyyMMddHH}.7z";
+            archiveName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, archiveName);
             compressor.CompressFiles(archiveName, files.Select(info => info.FullName).ToArray());
 
             PruneBackups();
