@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace ArkBackup
 
         public SaveWatcher()
         {
-            DirectoryInfo saveDir = new DirectoryInfo(".");
+            DirectoryInfo saveDir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
             IEnumerable<FileInfo> saveFiles = saveDir.GetFiles("*.ark", SearchOption.TopDirectoryOnly);
             FileInfo save = saveFiles.OrderBy(saveFile => saveFile.Length).First();
 
