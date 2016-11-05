@@ -32,7 +32,7 @@ namespace ArkBackup
         /// </summary>
         public SaveWatcher()
         {
-            IEnumerable<FileInfo> saveFiles = SaveDir.GetFiles("*.ark", SearchOption.TopDirectoryOnly);
+            IEnumerable<FileInfo> saveFiles = SaveDir.EnumerateFiles().Where(info => info.Extension == ".ark");
             var save = saveFiles.OrderBy(saveFile => saveFile.Length).First();
 
             _watcher.Path = SaveDir.FullName;
