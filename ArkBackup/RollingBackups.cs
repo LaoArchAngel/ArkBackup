@@ -76,9 +76,10 @@ namespace ArkBackup
         /// <param name="files">Files to be included in the backup</param>
         public void CreateBackup(IEnumerable<FileInfo> files)
         {
+            SevenZipCompressor.SetLibraryPath(Path.Combine(@"C:\Program Files\7-Zip", @"7z.dll"));
             SevenZipCompressor compressor = new SevenZipCompressor();
 
-            string archiveName = $"SaveBackup_{DateTime.Now:yyyyMMddHH}.7z";
+            string archiveName = $"SaveBackup_{DateTime.Now:yyyyMMddHHmm}.7z";
             archiveName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, archiveName);
             compressor.CompressFiles(archiveName, files.Select(info => info.FullName).ToArray());
 
