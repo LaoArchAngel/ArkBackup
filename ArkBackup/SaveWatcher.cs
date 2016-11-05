@@ -9,7 +9,7 @@ namespace ArkBackup
     /// <summary>
     ///     Watches the save directory for changes to the effective save.
     /// </summary>
-    internal class SaveWatcher
+    internal class SaveWatcher : IDisposable
     {
         /// <summary>
         ///     <c>Directory</c> we're watching.
@@ -41,6 +41,15 @@ namespace ArkBackup
         }
 
         /// <summary>
+        ///     Implement the <see cref="IDisposable" /> pattern.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
         ///     Handles <see cref="System.IO.FileSystemWatcher.Changed" /> event.
         /// </summary>
         /// <param name="source">Likely the watcher itself.</param>
@@ -53,6 +62,25 @@ namespace ArkBackup
             toBackup.AddRange(SaveDir.GetFiles(@"*.arkprofile"));
 
             _mgr.CreateBackup(toBackup);
+        }
+
+        /// <summary>
+        ///     Dispose of our watcher.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> if we're calling from <see cref="IDisposable.Dispose" />, otherwise false.</param>
+        // ReSharper disable once FlagArgument
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+                _watcher.Dispose();
+        }
+
+        /// <summary>
+        ///     Safely dispose of objects.
+        /// </summary>
+        ~SaveWatcher()
+        {
+            Dispose(false);
         }
     }
 }
