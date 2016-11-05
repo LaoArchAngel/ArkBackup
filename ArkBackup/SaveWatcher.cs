@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace ArkBackup
 {
@@ -18,10 +19,16 @@ namespace ArkBackup
         /// </summary>
         private readonly int _backups = 20;
 
+        /// <summary>
+        /// <c>Directory</c> we're watching.
+        /// </summary>
+        private static readonly DirectoryInfo SaveDir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+
+        private readonly BackupManager _mgr = new BackupManager();
+
         public SaveWatcher()
         {
-            DirectoryInfo saveDir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
-            IEnumerable<FileInfo> saveFiles = saveDir.GetFiles("*.ark", SearchOption.TopDirectoryOnly);
+            IEnumerable<FileInfo> saveFiles = SaveDir.GetFiles("*.ark", SearchOption.TopDirectoryOnly);
             FileInfo save = saveFiles.OrderBy(saveFile => saveFile.Length).First();
 
             _watcher.Filter = save.Name;
@@ -36,7 +43,12 @@ namespace ArkBackup
 
         private void SaveChanged(object source, FileSystemEventArgs args)
         {
-            
+            Thread.Sleep(TimeSpan.FromMinutes(1));
+
+            List<FileInfo> toBackup = new List<FileInfo> {new FileInfo(args.FullPath)};
+            toBackup.AddRange(SaveDir.GetFiles(@"*.arkprofile"));
+
+            _mgr.CreateBackup(toBackup);
         }
 
 
