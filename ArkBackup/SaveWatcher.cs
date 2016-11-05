@@ -26,6 +26,8 @@ namespace ArkBackup
         /// </summary>
         private readonly FileSystemWatcher _watcher = new FileSystemWatcher();
 
+        private FileInfo _saveFile;
+
         /// <summary>
         ///     Initializes the <see cref="FileSystemWatcher" /> . Determines save
         ///     by looking for shortest filename with a .ark extension.
@@ -33,14 +35,15 @@ namespace ArkBackup
         public SaveWatcher()
         {
             IEnumerable<FileInfo> saveFiles = SaveDir.EnumerateFiles().Where(info => info.Extension == ".ark");
-            var save = saveFiles.OrderBy(saveFile => saveFile.Name.Length).First();
+            _saveFile = saveFiles.OrderBy(saveFile => saveFile.Name.Length).First();
 
-            Console.WriteLine("Watching File: {0}", save.Name);
+            Console.WriteLine("Watching File: {0}", _saveFile.Name);
+            var nameWithoutExt = _saveFile.Name.Substring(0, _saveFile.Name.Length - _saveFile.Extension.Length);
 
             _watcher.Path = SaveDir.FullName;
-            _watcher.Filter = save.Name;
-            _watcher.NotifyFilter = NotifyFilters.LastWrite;
+            _watcher.Filter = $@"{nameWithoutExt}.tmp";
             _watcher.Changed += SaveChanged;
+            //_watcher.Deleted += SaveChanged;
             _watcher.EnableRaisingEvents = true;
         }
 
@@ -60,10 +63,10 @@ namespace ArkBackup
         /// <param name="args">Arguments given by the watcher.</param>
         private void SaveChanged(object source, FileSystemEventArgs args)
         {
-            Console.WriteLine("Change detected.  Sleeping...");
+            Console.WriteLine("Change detected: {0} :: {1}.  Sleeping...", args.FullPath, args.ChangeType);
             Thread.Sleep(TimeSpan.FromMinutes(1));
 
-            var toBackup = new List<FileInfo> {new FileInfo(args.FullPath)};
+            var toBackup = new List<FileInfo> {_saveFile};
             toBackup.AddRange(SaveDir.GetFiles(@"*.arkprofile"));
 
             _mgr.CreateBackup(toBackup);
