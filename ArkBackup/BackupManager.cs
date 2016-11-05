@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using SevenZip;
 
 namespace ArkBackup
 {
@@ -57,7 +59,12 @@ namespace ArkBackup
 
         public void CreateBackup(IEnumerable<FileInfo> files)
         {
-            
+            SevenZipCompressor compressor = new SevenZipCompressor();
+
+            string archiveName = $"SaveBackup_{DateTime.Now:yyyyMMdd}.7z";
+            compressor.CompressFiles(archiveName, files.Select(info => info.FullName).ToArray());
+
+            PruneBackups();
         }
     }
 }
