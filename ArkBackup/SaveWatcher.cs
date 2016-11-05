@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,50 +6,53 @@ using System.Threading;
 
 namespace ArkBackup
 {
-    class SaveWatcher
+    /// <summary>
+    ///     Watches the save directory for changes to the effective save.
+    /// </summary>
+    internal class SaveWatcher
     {
         /// <summary>
-        /// Watcher checking when the the save changes.
+        ///     <c>Directory</c> we're watching.
+        /// </summary>
+        private static readonly DirectoryInfo SaveDir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+
+        /// <summary>
+        ///     Backup manager used to create backups of our watched saves.
+        /// </summary>
+        private readonly RollingBackups _mgr = new RollingBackups();
+
+        /// <summary>
+        ///     Watcher checking when the the save changes.
         /// </summary>
         private readonly FileSystemWatcher _watcher = new FileSystemWatcher();
 
         /// <summary>
-        /// Number of backups to keep.
+        ///     Initializes the <see cref="FileSystemWatcher" /> . Determines save
+        ///     by looking for shortest filename with a .ark extension.
         /// </summary>
-        private readonly int _backups = 20;
-
-        /// <summary>
-        /// <c>Directory</c> we're watching.
-        /// </summary>
-        private static readonly DirectoryInfo SaveDir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
-
-        private readonly BackupManager _mgr = new BackupManager();
-
         public SaveWatcher()
         {
             IEnumerable<FileInfo> saveFiles = SaveDir.GetFiles("*.ark", SearchOption.TopDirectoryOnly);
-            FileInfo save = saveFiles.OrderBy(saveFile => saveFile.Length).First();
+            var save = saveFiles.OrderBy(saveFile => saveFile.Length).First();
 
             _watcher.Filter = save.Name;
             _watcher.NotifyFilter = NotifyFilters.LastWrite;
             _watcher.Changed += SaveChanged;
         }
 
-        public SaveWatcher(int backups) : this()
-        {
-            _backups = backups;
-        }
-
+        /// <summary>
+        ///     Handles <see cref="System.IO.FileSystemWatcher.Changed" /> event.
+        /// </summary>
+        /// <param name="source">Likely the watcher itself.</param>
+        /// <param name="args">Arguments given by the watcher.</param>
         private void SaveChanged(object source, FileSystemEventArgs args)
         {
             Thread.Sleep(TimeSpan.FromMinutes(1));
 
-            List<FileInfo> toBackup = new List<FileInfo> {new FileInfo(args.FullPath)};
+            var toBackup = new List<FileInfo> {new FileInfo(args.FullPath)};
             toBackup.AddRange(SaveDir.GetFiles(@"*.arkprofile"));
 
             _mgr.CreateBackup(toBackup);
         }
-
-
     }
 }

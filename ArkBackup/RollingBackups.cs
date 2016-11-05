@@ -2,19 +2,32 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using SevenZip;
 
 namespace ArkBackup
 {
-    class BackupManager
+    /// <summary>
+    /// Creates and prunes backups.
+    /// </summary>
+    internal class RollingBackups
     {
-        private readonly Dictionary<int, FileInfo> _backups = new Dictionary<int, FileInfo>();
-        private readonly int _numBackups;
+        /// <summary>
+        /// A list of our current backups.  The key is the time stamp of creation
+        /// </summary>
+        private readonly Dictionary<long, FileInfo> _backups = new Dictionary<long, FileInfo>();
 
-        public BackupManager(int backups = 20)
+        /// <summary>
+        /// The number of backups to keep.
+        /// </summary>
+        private readonly int _backupCount;
+
+        /// <summary>
+        /// Creates a new RollingBackups instance specifying the number of backup files to keep.
+        /// </summary>
+        /// <param name="backups">The number of backup files to keep.  The oldest are deleted.</param>
+        public RollingBackups(int backups = 20)
         {
-            _numBackups = 20;
+            _backupCount = backups;
 
             LoadCurrentBackups();
         }
@@ -24,7 +37,7 @@ namespace ArkBackup
         /// </summary>
         private void PruneBackups()
         {
-            if(_backups.Count <= _numBackups)
+            if(_backups.Count <= _backupCount)
                 return;
 
             var missing = _backups.Where(backup => !backup.Value.Exists).Select(backup => backup.Key);
@@ -34,7 +47,7 @@ namespace ArkBackup
                 _backups.Remove(missingKey);
             }
 
-            if (_backups.Count <= _numBackups)
+            if (_backups.Count <= _backupCount)
             {
                 return;
             }
@@ -52,16 +65,20 @@ namespace ArkBackup
 
             foreach (var backup in currentBackups)
             {
-                int date = Convert.ToInt32(backup.Name.Split('.', '_')[1]);
+                long date = Convert.ToInt64(backup.Name.Split('.', '_')[1]);
                 _backups.Add(date, backup);
             }
         }
 
+        /// <summary>
+        /// Creates a .7z file with all save <paramref name="files"/> compressed.
+        /// </summary>
+        /// <param name="files">Files to be included in the backup</param>
         public void CreateBackup(IEnumerable<FileInfo> files)
         {
             SevenZipCompressor compressor = new SevenZipCompressor();
 
-            string archiveName = $"SaveBackup_{DateTime.Now:yyyyMMdd}.7z";
+            string archiveName = $"SaveBackup_{DateTime.Now:yyyyMMddHH}.7z";
             compressor.CompressFiles(archiveName, files.Select(info => info.FullName).ToArray());
 
             PruneBackups();
