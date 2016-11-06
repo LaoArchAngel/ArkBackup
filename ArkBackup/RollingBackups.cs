@@ -46,7 +46,7 @@ namespace ArkBackup
             if (_backups.Count <= _backupCount)
                 return;
 
-            IEnumerable<long> toRemove = _backups.Keys.OrderBy(key => key);
+            IEnumerable<long> toRemove = _backups.Keys.OrderByDescending(key => key);
             toRemove = toRemove.Skip(_backupCount);
 
             foreach (var key in toRemove)
