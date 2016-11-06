@@ -37,27 +37,33 @@ namespace ArkBackup
         /// </summary>
         private void PruneBackups()
         {
-            if(_backups.Count <= _backupCount)
-                return;
-
-            var missing = _backups.Where(backup => !backup.Value.Exists).Select(backup => backup.Key);
-
-            foreach (var missingKey in missing)
-            {
-                _backups.Remove(missingKey);
-            }
+            PruneMissing();
 
             if (_backups.Count <= _backupCount)
             {
                 return;
             }
 
-            IEnumerable<long> toRemove = _backups.Keys.OrderBy(key => key).Skip(_backupCount);
+            IEnumerable<long> toRemove = _backups.Keys.OrderBy(key => key);
+            toRemove = toRemove.Skip(_backupCount);
 
             foreach (var key in toRemove)
             {
                 _backups[key].Delete();
                 _backups.Remove(key);
+            }            
+        }
+
+        /// <summary>
+        /// Prunes all missing backups from our current list.
+        /// </summary>
+        private void PruneMissing()
+        {
+            var missing = _backups.Where(backup => !backup.Value.Exists).Select(backup => backup.Key);
+
+            foreach (var missingKey in missing)
+            {
+                _backups.Remove(missingKey);
             }
         }
 
