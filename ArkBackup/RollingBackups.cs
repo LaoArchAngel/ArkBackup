@@ -92,22 +92,33 @@ namespace ArkBackup
             var compressor = new SevenZipCompressor();
 
             var timestamp = TimeStamp();
-
             string archiveName = $"SaveBackup_{timestamp}.7z";
+            string[] fileList = files.Select(info => info.FullName).ToArray();
+
             archiveName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, archiveName);
 
-            Console.WriteLine("Creating backup: {0}", archiveName);
-            Console.WriteLine("Backing up files:");
+            LogBackup(archiveName, fileList);
 
-            foreach (var fileInfo in files)
-                Console.WriteLine(fileInfo.FullName);
-
-            compressor.CompressFiles(archiveName, files.Select(info => info.FullName).ToArray());
+            compressor.CompressFiles(archiveName, fileList);
             _backups.Add(timestamp, new FileInfo(archiveName));
 
             PruneBackups();
 
             Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Writes to current log output the name of the backup and included files.
+        /// </summary>
+        /// <param name="archiveName"></param>
+        /// <param name="fileList"></param>
+        private static void LogBackup(string archiveName, string[] fileList)
+        {
+            Console.WriteLine("Creating backup: {0}", archiveName);
+            Console.WriteLine("Backing up files:");
+
+            foreach (var file in fileList)
+                Console.WriteLine(file);
         }
 
         /// <summary>
