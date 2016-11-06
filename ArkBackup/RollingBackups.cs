@@ -59,8 +59,6 @@ namespace ArkBackup
                 _backups[key].Delete();
                 _backups.Remove(key);
             }
-            
-            _backups.Remove(_backups.Keys.Max());
         }
 
         /// <summary>
