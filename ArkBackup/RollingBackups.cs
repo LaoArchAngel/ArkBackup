@@ -82,8 +82,10 @@ namespace ArkBackup
         }
 
         /// <summary>
-        ///     Creates a .7z file with all save <paramref name="files" />
-        ///     compressed.
+        ///     <para>
+        ///         Creates a .7z file with all save <paramref name="files" />
+        ///     </para>
+        ///     <para>compressed.</para>
         /// </summary>
         /// <param name="files">Files to be included in the backup</param>
         public void CreateBackup(IEnumerable<FileInfo> files)
@@ -93,7 +95,7 @@ namespace ArkBackup
 
             var timestamp = TimeStamp();
             string archiveName = $"SaveBackup_{timestamp}.7z";
-            string[] fileList = files.Select(info => info.FullName).ToArray();
+            var fileList = files.Select(info => info.FullName).ToArray();
 
             archiveName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, archiveName);
 
@@ -108,7 +110,8 @@ namespace ArkBackup
         }
 
         /// <summary>
-        /// Writes to current log output the name of the backup and included files.
+        ///     Writes to current log output the name of the backup and included
+        ///     files.
         /// </summary>
         /// <param name="archiveName"></param>
         /// <param name="fileList"></param>
