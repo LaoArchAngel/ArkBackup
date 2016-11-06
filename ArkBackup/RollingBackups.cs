@@ -33,6 +33,7 @@ namespace ArkBackup
             _backupCount = backups;
 
             LoadCurrentBackups();
+            PruneBackups();
         }
 
         /// <summary>
