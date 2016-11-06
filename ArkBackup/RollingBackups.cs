@@ -52,6 +52,14 @@ namespace ArkBackup
                 return;
             }
 
+            IEnumerable<long> toRemove = _backups.Keys.OrderBy(key => key).Skip(_backupCount);
+
+            foreach (var key in toRemove)
+            {
+                _backups[key].Delete();
+                _backups.Remove(key);
+            }
+            
             _backups.Remove(_backups.Keys.Max());
         }
 
