@@ -12,6 +12,10 @@ namespace ArkBackup
         {
             ConfigurationSectionGroup configGroup = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None)
                 .GetSectionGroup("ArkBackupGroup");
+
+            if (configGroup == null)
+                throw new ConfigurationErrorsException("Could not find ArkBackupGroup configuration section");
+
             IEnumerable<AbConfigSection> configs = configGroup.Sections.OfType<AbConfigSection>();
             var watchers = new Stack<SaveWatcher>();
 
