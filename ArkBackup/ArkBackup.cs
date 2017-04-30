@@ -10,7 +10,8 @@ namespace ArkBackup
     {
         private static void Main()
         {
-            var configGroup = (ConfigurationSectionGroup) ConfigurationManager.GetSection("ArkBackupGroup");
+            ConfigurationSectionGroup configGroup = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None)
+                .GetSectionGroup("ArkBackupGroup");
             IEnumerable<AbConfigSection> configs = configGroup.Sections.OfType<AbConfigSection>();
             var watchers = new Stack<SaveWatcher>();
 
