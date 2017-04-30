@@ -17,9 +17,15 @@ You can find the source and binaries for 7z.dll here:
 [7-zip.org](http://www.7-zip.org/a/7z1604-src.7z)
 
 ## Usage
-Just run `ArkBackup.exe`.  Hit enter when you want to close the application.
+Make sure you set your configuration by editing `ArkBackup.exe.config` in
+something like notepad, though I recommend
+[Notepad++](https://notepad-plus-plus.org/).  Then just run `ArkBackup.exe`.
+Hit enter when you want to close the application.
 
 ## Configuration
+The configuration file is `ArkBackup.exe.config`.  Edit using notepad or
+[Notepad++](https://notepad-plus-plus.org/).
+
 The application comes with a default configuration for TheIsland at the basic
 desktop install location.  You can modify it or use this section to create
 your own settings
