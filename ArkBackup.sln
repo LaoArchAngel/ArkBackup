@@ -1,13 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArkBackup", "ArkBackup\ArkBackup.csproj", "{3EC01A30-237A-4F99-AC70-2D06D63652E3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Paket", "Paket", "{A65095FA-C085-4514-B6B0-92D2A5A3B225}"
 	ProjectSection(SolutionItems) = preProject
 		paket.dependencies = paket.dependencies
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0743739C-4816-4933-9F28-0730D59EA47E}"
+	ProjectSection(SolutionItems) = preProject
+		ArkBackup.sln.DotSettings = ArkBackup.sln.DotSettings
 	EndProjectSection
 EndProject
 Global
