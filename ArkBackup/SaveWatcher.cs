@@ -70,6 +70,15 @@ namespace ArkBackup
             var toBackup = new List<FileInfo> {_saveFile};
             toBackup.AddRange(_saveDir.GetFiles(@"*.arkprofile"));
 
+            var toPrune =
+                _saveDir.GetFiles(_saveFile.Name.Substring(0, _saveFile.Name.Length - 4) + "_??.??.????_??.??.??.ark",
+                    SearchOption.TopDirectoryOnly);
+
+            foreach (var saveFile in toPrune)
+            {
+                saveFile.Delete();
+            }
+
             _mgr.CreateBackup(toBackup);
         }
 
