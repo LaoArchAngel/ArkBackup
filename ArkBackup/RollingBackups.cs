@@ -11,6 +11,8 @@ namespace ArkBackup
     /// </summary>
     internal class RollingBackups
     {
+        private readonly string _savePath;
+
         /// <summary>
         ///     The number of backups to keep.
         /// </summary>
@@ -28,8 +30,9 @@ namespace ArkBackup
         /// <param name="backups">
         ///     The number of backup files to keep. The oldest are deleted.
         /// </param>
-        public RollingBackups(int backups = 20)
+        public RollingBackups(string savePath, int backups = 20)
         {
+            _savePath = savePath;
             _backupCount = backups;
 
             LoadCurrentBackups();
@@ -98,7 +101,7 @@ namespace ArkBackup
             string archiveName = $"SaveBackup_{timestamp}.7z";
             var fileList = files.Select(info => info.FullName).ToArray();
 
-            archiveName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, archiveName);
+            archiveName = Path.Combine(_savePath, archiveName);
 
             LogBackup(archiveName, fileList);
 
