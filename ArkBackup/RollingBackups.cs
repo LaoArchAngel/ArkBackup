@@ -96,24 +96,27 @@ namespace ArkBackup
         /// <param name="files">Files to be included in the backup</param>
         public void CreateBackup(IEnumerable<FileInfo> files)
         {
-            SevenZipBase.SetLibraryPath(@".\7z.dll");
-            var compressor = new SevenZipCompressor();
 
             var timestamp = TimeStamp();
-            string archiveName = $"SaveBackup_{timestamp}.7z";
-            var fileList = files.Select(info => info.FullName).ToArray();
-
             string archiveName = $"SaveBackup_{_name}_{timestamp}.7z";
             archiveName = Path.Combine(_savePath, archiveName);
 
-            LogBackup(archiveName, fileList);
+            var fileList = files.Select(info => info.FullName).ToArray();
 
-            compressor.CompressFiles(archiveName, fileList);
+            LogBackup(archiveName, fileList);
+            Compress(archiveName, fileList);
             _backups.Add(timestamp, new FileInfo(archiveName));
 
             PruneBackups();
-
             Console.WriteLine();
+        }
+
+        private static void Compress(string archiveName, string[] fileList)
+        {
+            SevenZipBase.SetLibraryPath(@".\7z.dll");
+            var compressor = new SevenZipCompressor();
+
+            compressor.CompressFiles(archiveName, fileList);
         }
 
         /// <summary>
