@@ -64,7 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config\ABConfigSection.cs" />
+    <Compile Include="Config\AbConfigSection.cs" />
     <Compile Include="RollingBackups.cs" />
     <Compile Include="ArkBackup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,7 +76,11 @@
     </None>
     <None Include="paket.references" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="7-zip.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
