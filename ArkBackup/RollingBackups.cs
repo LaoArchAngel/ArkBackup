@@ -28,6 +28,8 @@ namespace ArkBackup
         ///     Creates a new RollingBackups instance specifying the number of
         ///     backup files to keep.
         /// </summary>
+        /// <param name="savePath">Path to place the backups</param>
+        /// <param name="name">Name of the backups</param>
         /// <param name="backups">
         ///     The number of backup files to keep. The oldest are deleted.
         /// </param>
