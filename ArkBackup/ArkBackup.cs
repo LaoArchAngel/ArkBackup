@@ -6,23 +6,25 @@ using ArkBackup.Config;
 
 namespace ArkBackup
 {
-    class ArkBackup
+    internal class ArkBackup
     {
-        static void Main()
+        private static void Main()
         {
             var configGroup = (ConfigurationSectionGroup) ConfigurationManager.GetSection("ArkBackupGroup");
             IEnumerable<AbConfigSection> configs = configGroup.Sections.OfType<AbConfigSection>();
             var watchers = new Stack<SaveWatcher>();
 
-            foreach (var abConfigSection in configs)
+            foreach (AbConfigSection abConfigSection in configs)
             {
-                watchers.Push(new SaveWatcher(abConfigSection.Name, abConfigSection.Path, abConfigSection.Delay,
-                    new RollingBackups(abConfigSection.Path, abConfigSection.Saves)));
+                watchers.Push(
+                    new SaveWatcher(
+                        abConfigSection.Name, abConfigSection.Path, abConfigSection.Delay,
+                        new RollingBackups(abConfigSection.Path, abConfigSection.Saves)));
             }
 
             Console.ReadLine();
 
-            foreach (var saveWatcher in watchers)
+            foreach (SaveWatcher saveWatcher in watchers)
             {
                 saveWatcher.Dispose();
             }
