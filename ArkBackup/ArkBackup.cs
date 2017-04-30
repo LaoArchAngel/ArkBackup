@@ -19,7 +19,7 @@ namespace ArkBackup
                 watchers.Push(
                     new SaveWatcher(
                         abConfigSection.Name, abConfigSection.Path, abConfigSection.Delay,
-                        new RollingBackups(abConfigSection.Path, abConfigSection.Saves)));
+                        new RollingBackups(abConfigSection.Path, abConfigSection.Name, abConfigSection.Saves)));
             }
 
             Console.ReadLine();
