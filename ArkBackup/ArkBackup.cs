@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using ArkBackup.Config;
 
 namespace ArkBackup
 {
@@ -6,11 +10,22 @@ namespace ArkBackup
     {
         static void Main()
         {
-            var watcher = new SaveWatcher();
+            var configGroup = (ConfigurationSectionGroup) ConfigurationManager.GetSection("ArkBackupGroup");
+            IEnumerable<AbConfigSection> configs = configGroup.Sections.OfType<AbConfigSection>();
+            var watchers = new Stack<SaveWatcher>();
+
+            foreach (var abConfigSection in configs)
+            {
+                watchers.Push(new SaveWatcher(abConfigSection.Name, abConfigSection.Path,
+                    new RollingBackups(abConfigSection.Saves)));
+            }
 
             Console.ReadLine();
 
-            watcher.Dispose();
+            foreach (var saveWatcher in watchers)
+            {
+                saveWatcher.Dispose();
+            }
         }
     }
 }
