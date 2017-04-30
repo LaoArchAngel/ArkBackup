@@ -15,6 +15,8 @@ namespace ArkBackup
         /// </summary>
         private static DirectoryInfo _saveDir;
 
+        private readonly int _backupDelay;
+
         /// <summary>
         ///     Backup manager used to create backups of our watched saves.
         /// </summary>
@@ -31,9 +33,10 @@ namespace ArkBackup
         ///     Initializes the <see cref="FileSystemWatcher" /> . Determines save
         ///     by looking for shortest filename with a .ark extension.
         /// </summary>
-        public SaveWatcher(string saveName, string path, RollingBackups backup)
+        public SaveWatcher(string saveName, string path, int backupDelay, RollingBackups backup)
         {
             _saveDir = new DirectoryInfo(path);
+            _backupDelay = backupDelay;
             _mgr = backup;
             _saveFile = new FileInfo(Path.Combine(path, saveName + ".ark"));
 
@@ -62,7 +65,7 @@ namespace ArkBackup
         private void SaveChanged(object source, FileSystemEventArgs args)
         {
             Console.WriteLine("Change detected: {0} :: {1}.  Sleeping...", args.FullPath, args.ChangeType);
-            Thread.Sleep(TimeSpan.FromMinutes(1));
+            Thread.Sleep(TimeSpan.FromSeconds(_backupDelay));
 
             var toBackup = new List<FileInfo> {_saveFile};
             toBackup.AddRange(_saveDir.GetFiles(@"*.arkprofile"));

@@ -16,7 +16,7 @@ namespace ArkBackup
 
             foreach (var abConfigSection in configs)
             {
-                watchers.Push(new SaveWatcher(abConfigSection.Name, abConfigSection.Path,
+                watchers.Push(new SaveWatcher(abConfigSection.Name, abConfigSection.Path, abConfigSection.Delay,
                     new RollingBackups(abConfigSection.Path, abConfigSection.Saves)));
             }
 
