@@ -14,6 +14,7 @@ namespace ArkBackup
                 .GetSectionGroup("ArkBackupGroup");
 
             if (configGroup == null)
+                // ReSharper disable once UnthrowableException
                 throw new ConfigurationErrorsException("Could not find ArkBackupGroup configuration section");
 
             IEnumerable<AbConfigSection> configs = configGroup.Sections.OfType<AbConfigSection>();
