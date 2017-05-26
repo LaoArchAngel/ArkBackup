@@ -23,8 +23,8 @@ namespace ArkBackup
             {
                 watchers.Push(
                     new SaveWatcher(
-                        abConfigSection.Name, abConfigSection.Path, abConfigSection.Delay,
-                        new RollingBackups(abConfigSection.Path, abConfigSection.Name, abConfigSection.Saves)));
+                        abConfigSection.Map, abConfigSection.Path, abConfigSection.Delay,
+                        new RollingBackups(abConfigSection.Path, abConfigSection.Name?.Trim() ?? abConfigSection.Map, abConfigSection.Saves)));
             }
 
             Console.ReadLine();

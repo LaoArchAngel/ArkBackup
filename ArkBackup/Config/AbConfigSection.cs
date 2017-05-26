@@ -1,14 +1,15 @@
 ﻿using System.Configuration;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace ArkBackup.Config
 {
     public class AbConfigSection : ConfigurationSection
     {
-        [ConfigurationProperty("name", DefaultValue = "TheIsland", IsRequired = false)]
-        public string Name  
+        [ConfigurationProperty("map", DefaultValue = "TheIsland", IsRequired = false)]
+        public string Map
         {
-            get => (string) this["name"];
-            set => this["name"] = value;
+            get => (string) this["map"];
+            set => this["map"] = value;
         }
 
         [ConfigurationProperty("path", IsRequired = true)]
@@ -30,6 +31,13 @@ namespace ArkBackup.Config
         {
             get => (int) this["delay"];
             set => this["delay"] = value;
+        }
+
+        [ConfigurationProperty("name", IsRequired = false)]
+        public string Name
+        {
+            get => (string) this["name"];
+            set => this["name"] = value;
         }
     }
 }
