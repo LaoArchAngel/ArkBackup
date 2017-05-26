@@ -10,17 +10,10 @@ namespace ArkBackup
     {
         private static void Main()
         {
-            ConfigurationSectionGroup configGroup = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None)
-                .GetSectionGroup("ArkBackupGroup");
-
-            if (configGroup == null)
-                // ReSharper disable once UnthrowableException
-                throw new ConfigurationErrorsException("Could not find ArkBackupGroup configuration section");
-
-            IEnumerable<AbConfigSection> configs = configGroup.Sections.OfType<AbConfigSection>();
+            AbConfigSection section = ConfigurationManager.GetSection("ArkBackupConfig") as AbConfigSection;
             var watchers = new Stack<SaveWatcher>();
 
-            foreach (AbConfigSection abConfigSection in configs)
+            foreach (Save abConfigSection in section.Saves.OfType<Save>())
             {
                 watchers.Push(
                     new SaveWatcher(
